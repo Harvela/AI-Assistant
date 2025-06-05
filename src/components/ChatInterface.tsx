@@ -49,6 +49,27 @@ export default function ChatInterface() {
     }, 1000);
   };
 
+  const handleServiceClick = (service: { name: string }) => {
+    if (isLoading) return;
+    const userMessage: Message = {
+      role: 'user',
+      content: `I want to chat about ${service.name}.`,
+    };
+    setMessages(prev => [...prev, userMessage]);
+    setIsLoading(true);
+    setInput('');
+    setTimeout(() => {
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: `Great! Let's talk about ${service.name}. How can I help you with ${service.name.toLowerCase()}?`,
+      };
+      setMessages(prev => [...prev, assistantMessage]);
+      setIsLoading(false);
+    }, 1000);
+  };
+
+  const hasMessages = messages.length > 0;
+
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
       {/* Mobile Sidebar Toggle */}
@@ -89,35 +110,47 @@ export default function ChatInterface() {
       )}
       
       <div className="flex-1 flex flex-col h-full">
-        {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto p-4 md:pt-4 max-w-3xl w-full mx-auto">
-          {messages.map((message, index) => (
-            <ChatMessage
-              key={index}
-              role={message.role}
-              content={message.content}
-            />
-          ))}
-          {isLoading && (
-            <div className="flex justify-start mb-4">
-              <div className="bg-gray-200 dark:bg-gray-700 rounded-lg p-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" />
-                  <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce delay-100" />
-                  <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce delay-200" />
+        {/* Chat Messages or Centered ServiceLinks */}
+        <div className={`flex-1 overflow-y-auto p-4 md:pt-4 max-w-3xl w-full mx-auto ${!hasMessages ? 'flex items-center justify-center' : ''}`}>
+          {hasMessages ? (
+            <>
+              {messages.map((message, index) => (
+                <ChatMessage
+                  key={index}
+                  role={message.role}
+                  content={message.content}
+                />
+              ))}
+              {isLoading && (
+                <div className="flex justify-start mb-4">
+                  <div className="bg-gray-200 dark:bg-gray-700 rounded-lg p-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" />
+                      <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce delay-100" />
+                      <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce delay-200" />
+                    </div>
+                  </div>
                 </div>
+              )}
+              <div ref={messagesEndRef} />
+            </>
+          ) : (
+            <div className="w-full flex items-center justify-center">
+              <div className="max-w-2xl w-full">
+                <ServiceLinks onServiceClick={handleServiceClick} />
               </div>
             </div>
           )}
-          <div ref={messagesEndRef} />
         </div>
 
-        {/* Service Links */}
-        <div className="border-t border-gray-400 dark:border-gray-700 bg-gray-200 dark:bg-gray-900 px-2 py-2 md:px-4 md:py-3">
-          <div className="max-w-3xl mx-auto">
-            <ServiceLinks />
+        {/* Service Links at the bottom if there are messages */}
+        {hasMessages && (
+          <div className="border-t border-gray-400 dark:border-gray-700 bg-gray-200 dark:bg-gray-900 px-2 py-2 md:px-4 md:py-3">
+            <div className="max-w-3xl mx-auto">
+              <ServiceLinks onServiceClick={handleServiceClick} />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Input Form */}
         <div className="border-t border-gray-400 dark:border-gray-700 bg-gray-300 dark:bg-gray-900 px-2 py-2 md:px-4 md:py-3">

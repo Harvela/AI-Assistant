@@ -6,6 +6,10 @@ interface Service {
   image: string;
 }
 
+interface ServiceLinksProps {
+  onServiceClick?: (service: Service) => void;
+}
+
 const services: Service[] = [
   {
     name: 'Education',
@@ -39,7 +43,7 @@ const services: Service[] = [
   },
 ];
 
-export default function ServiceLinks() {
+export default function ServiceLinks({ onServiceClick }: ServiceLinksProps) {
   const router = useRouter();
 
   return (
@@ -48,7 +52,11 @@ export default function ServiceLinks() {
         {services.map((service) => (
           <button
             key={service.name}
-            onClick={() => router.push(service.path)}
+            onClick={() =>
+              onServiceClick
+                ? onServiceClick(service)
+                : router.push(service.path)
+            }
             className="bg-gray-200 dark:bg-gray-800 shadow-md hover:shadow-lg transition-shadow duration-200 rounded-md md:rounded-lg overflow-hidden"
           >
             <div className="relative h-10 md:h-18 md:h-24 w-full">
