@@ -143,15 +143,6 @@ export default function ChatInterface() {
           )}
         </div>
 
-        {/* Service Links at the bottom if there are messages */}
-        {hasMessages && (
-          <div className="border-t border-gray-400 dark:border-gray-700 bg-gray-200 dark:bg-gray-900 px-2 py-2 md:px-4 md:py-3">
-            <div className="max-w-3xl mx-auto">
-              <ServiceLinks onServiceClick={handleServiceClick} />
-            </div>
-          </div>
-        )}
-
         {/* Input Form */}
         <div className="border-t border-gray-400 dark:border-gray-700 bg-gray-300 dark:bg-gray-900 px-2 py-2 md:px-4 md:py-3">
           <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto">

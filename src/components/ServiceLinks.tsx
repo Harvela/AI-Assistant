@@ -48,7 +48,7 @@ export default function ServiceLinks({ onServiceClick }: ServiceLinksProps) {
 
   return (
     <div className="w-full overflow-x-auto pb-2">
-      <div className="grid grid-cols-3 lg:grid-cols-6 gap-3 md:gap-8 px-4">
+      <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 md:gap-8 px-4">
         {services.map((service) => (
           <button
             key={service.name}
@@ -59,7 +59,7 @@ export default function ServiceLinks({ onServiceClick }: ServiceLinksProps) {
             }
             className="bg-gray-200 dark:bg-gray-800 shadow-md hover:shadow-lg transition-shadow duration-200 rounded-md md:rounded-lg overflow-hidden"
           >
-            <div className="relative h-10 md:h-18 md:h-24 w-full">
+            <div className="relative h-16 md:h-24 w-full">
               <img
                 src={service.image}
                 alt={service.name}
