@@ -3,6 +3,7 @@
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 interface ChatItem {
   id: string;
@@ -67,7 +68,7 @@ export default function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex flex-col gap-4 items-start p-4">
-      <button
+        <button
           onClick={handleNewChat}
           className="text-semibold text-[16px]"
           title="New Chat"
@@ -81,6 +82,16 @@ export default function Sidebar() {
         >
           Search chat
         </button>
+        {/* Feature Links */}
+        <div className="mt-2 flex flex-col gap-2 w-full">
+          <Link href="/services/prayer-request" className="text-left w-full px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Prayer Request</Link>
+          <Link href="/services/ask-bible" className="text-left w-full px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Ask About the Bible</Link>
+          <Link href="/services/calendar" className="text-left w-full px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Christian Calendar</Link>
+          <Link href="/services/faith-tracker" className="text-left w-full px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Faith Journey Tracker</Link>
+          <Link href="/services/music" className="text-left w-full px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Christian Music</Link>
+          <Link href="/services/church-finder" className="text-left w-full px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Church Finder</Link>
+          <Link href="/kids-corner" className="text-left w-full px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Christian Kids' Corner</Link>
+        </div>
       </nav>
 
       {/* Chat History */}

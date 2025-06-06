@@ -12,34 +12,24 @@ interface ServiceLinksProps {
 
 const services: Service[] = [
   {
-    name: 'Education',
-    path: '/services/education',
-    image: '/images/education.jpg',
+    name: 'Daily Prayers & Devotionals',
+    path: '/services/prayers',
+    image: '/images/prayer.jpg',
   },
   {
-    name: 'Fashion',
-    path: '/services/fashion',
-    image: '/images/fashion.jpg',
+    name: 'Christian Life Advice',
+    path: '/services/advice',
+    image: '/images/advice.jpg',
   },
   {
-    name: 'Business',
-    path: '/services/business',
-    image: '/images/business.png',
+    name: 'Bible Study Tools (Adults & Kids)',
+    path: '/services/bible-study',
+    image: '/images/bible-study.jpg',
   },
   {
-    name: 'Hair Style',
-    path: '/services/hair-style',
-    image: '/images/hair.jpg',
-  },
-  {
-    name: 'Jewelry',
-    path: '/services/jewelry',
-    image: '/images/jew.jpg',
-  },
-  {
-    name: 'Shop',
-    path: '/services/shop',
-    image: '/images/shop.jpeg',
+    name: 'Motivational Messages & Blessings',
+    path: '/services/motivation',
+    image: '/images/motivation.jpg',
   },
 ];
 
@@ -48,7 +38,7 @@ export default function ServiceLinks({ onServiceClick }: ServiceLinksProps) {
 
   return (
     <div className="w-full overflow-x-auto pb-2">
-      <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 md:gap-8 px-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 px-4">
         {services.map((service) => (
           <button
             key={service.name}

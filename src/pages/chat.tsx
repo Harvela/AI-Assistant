@@ -20,8 +20,10 @@ export default function ChatPage() {
     // Check if user is authenticated and verified
     const phoneNumber = localStorage.getItem('phoneNumber');
     const isVerified = localStorage.getItem('isVerified');
+    const trialAttempts = parseInt(localStorage.getItem('trialAttempts') || '0');
 
-    if (!phoneNumber || !isVerified) {
+    // If user has used all trial attempts and is not authenticated, redirect to login
+    if (trialAttempts >= 3 && (!phoneNumber || !isVerified)) {
       router.push('/');
     } else {
       setIsLoading(false);
