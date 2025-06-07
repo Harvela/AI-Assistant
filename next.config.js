@@ -16,8 +16,8 @@ const nextConfig = {
   // You can remove `basePath` if you don't need it.
   reactStrictMode: true,
   experimental: {
-    appDir: false // Explicitly disable the App Router
-  }
+    appDir: false, // Explicitly disable the App Router
+  },
 };
 
 module.exports = withBundleAnalyzer(nextConfig);

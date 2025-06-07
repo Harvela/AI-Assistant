@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/router';
+
 import QuickAccessLinks from '../../components/QuickAccessLinks';
 
 const serviceDetails = {
@@ -39,13 +40,13 @@ export default function ServicePage() {
 
   if (!serviceInfo) {
     return (
-      <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
-        <header className="p-4 flex justify-end">
+      <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
+        <header className="flex justify-end p-4">
           <QuickAccessLinks />
         </header>
-        <main className="flex-1 flex items-center justify-center p-4">
+        <main className="flex flex-1 items-center justify-center p-4">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">
               Service Not Found
             </h1>
             <button
@@ -61,33 +62,34 @@ export default function ServicePage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
-      <header className="p-4 flex justify-end">
+    <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
+      <header className="flex justify-end p-4">
         <QuickAccessLinks />
       </header>
 
-      <main className="flex-1 flex items-center justify-center p-4">
+      <main className="flex flex-1 items-center justify-center p-4">
         <div className="w-full max-w-2xl">
-          <div className="text-center mb-8">
-            <span className="text-6xl mb-4 block">{serviceInfo.icon}</span>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+          <div className="mb-8 text-center">
+            <span className="mb-4 block text-6xl">{serviceInfo.icon}</span>
+            <h1 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white">
               {serviceInfo.title}
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mb-8">
+            <p className="mb-8 text-gray-600 dark:text-gray-400">
               {serviceInfo.description}
             </p>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          <div className="rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
+            <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
               Start Chatting
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Click the button below to start a chat about {serviceInfo.title.toLowerCase()}.
+            <p className="mb-6 text-gray-600 dark:text-gray-400">
+              Click the button below to start a chat about{' '}
+              {serviceInfo.title.toLowerCase()}.
             </p>
             <button
               onClick={() => router.push('/chat')}
-              className="w-full p-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
+              className="w-full rounded-lg bg-blue-500 p-3 font-medium text-white transition-colors hover:bg-blue-600"
             >
               Start Chat
             </button>
@@ -96,4 +98,4 @@ export default function ServicePage() {
       </main>
     </div>
   );
-} 
+}

@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 export default function Home() {
   const router = useRouter();
@@ -10,7 +10,10 @@ export default function Home() {
     // Check if user is authenticated
     const phoneNumber = localStorage.getItem('phoneNumber');
     const isVerified = localStorage.getItem('isVerified');
-    const trialAttempts = parseInt(localStorage.getItem('trialAttempts') || '0');
+    const trialAttempts = parseInt(
+      localStorage.getItem('trialAttempts') || '0',
+      10,
+    );
 
     // If user is authenticated and verified, redirect to chat
     if (phoneNumber && isVerified) {
@@ -27,8 +30,8 @@ export default function Home() {
   }, [router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="size-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
     </div>
   );
 }

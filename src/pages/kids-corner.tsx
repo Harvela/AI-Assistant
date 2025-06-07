@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 
 const TABS = [
   { key: 'stories', label: 'Stories' },
@@ -16,70 +16,108 @@ export default function KidsCorner() {
   const [activeTab, setActiveTab] = useState('stories');
 
   return (
-    <div className="min-h-screen bg-yellow-50 dark:bg-yellow-900/20 flex flex-col items-center py-8 px-2">
-      <button onClick={() => router.back()} className="mb-4 px-4 py-2 bg-blue-200 hover:bg-blue-300 rounded text-blue-900 font-semibold">← Back</button>
-      <h1 className="text-3xl font-extrabold text-yellow-800 dark:text-yellow-200 mb-6 flex items-center gap-2">
-        <span role="img" aria-label="kids">🧒</span> Christian Kids' Corner
+    <div className="flex min-h-screen flex-col items-center bg-yellow-50 px-2 py-8 dark:bg-yellow-900/20">
+      <button
+        onClick={() => router.back()}
+        className="mb-4 rounded bg-blue-200 px-4 py-2 font-semibold text-blue-900 hover:bg-blue-300"
+      >
+        ← Back
+      </button>
+      <h1 className="mb-6 flex items-center gap-2 text-3xl font-extrabold text-yellow-800 dark:text-yellow-200">
+        <span role="img" aria-label="kids">
+          🧒
+        </span>{' '}
+        Christian Kids&apos; Corner
       </h1>
       {/* Tabs */}
-      <div className="flex gap-2 mb-6 flex-wrap justify-center">
-        {TABS.map(tab => (
+      <div className="mb-6 flex flex-wrap justify-center gap-2">
+        {TABS.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`px-4 py-2 rounded-full font-semibold transition-colors text-sm shadow-sm
-              ${activeTab === tab.key ? 'bg-yellow-400 text-yellow-900' : 'bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100 hover:bg-yellow-200 dark:hover:bg-yellow-700'}`}
+            className={`rounded-full px-4 py-2 text-sm font-semibold shadow-sm transition-colors
+              ${activeTab === tab.key ? 'bg-yellow-400 text-yellow-900' : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:bg-yellow-800 dark:text-yellow-100 dark:hover:bg-yellow-700'}`}
           >
             {tab.label}
           </button>
         ))}
       </div>
       {/* Tab Content */}
-      <div className="w-full max-w-2xl bg-white dark:bg-gray-800 rounded-lg shadow p-6 min-h-[250px]">
+      <div className="min-h-[250px] w-full max-w-2xl rounded-lg bg-white p-6 shadow dark:bg-gray-800">
         {activeTab === 'stories' && (
           <div>
-            <h2 className="text-xl font-bold mb-2 text-yellow-700 dark:text-yellow-200">Bible Stories</h2>
-            <p className="text-gray-700 dark:text-gray-200">Fun and simple Bible stories for kids will appear here!</p>
+            <h2 className="mb-2 text-xl font-bold text-yellow-700 dark:text-yellow-200">
+              Bible Stories
+            </h2>
+            <p className="text-gray-700 dark:text-gray-200">
+              Fun and simple Bible stories for kids will appear here!
+            </p>
           </div>
         )}
         {activeTab === 'games' && (
           <div>
-            <h2 className="text-xl font-bold mb-2 text-yellow-700 dark:text-yellow-200">Games</h2>
-            <p className="text-gray-700 dark:text-gray-200">Play Christian games and puzzles here soon!</p>
+            <h2 className="mb-2 text-xl font-bold text-yellow-700 dark:text-yellow-200">
+              Games
+            </h2>
+            <p className="text-gray-700 dark:text-gray-200">
+              Play Christian games and puzzles here soon!
+            </p>
           </div>
         )}
         {activeTab === 'quizzes' && (
           <div>
-            <h2 className="text-xl font-bold mb-2 text-yellow-700 dark:text-yellow-200">Quizzes</h2>
-            <p className="text-gray-700 dark:text-gray-200">Test your Bible knowledge with fun quizzes!</p>
+            <h2 className="mb-2 text-xl font-bold text-yellow-700 dark:text-yellow-200">
+              Quizzes
+            </h2>
+            <p className="text-gray-700 dark:text-gray-200">
+              Test your Bible knowledge with fun quizzes!
+            </p>
           </div>
         )}
         {activeTab === 'coloring' && (
           <div>
-            <h2 className="text-xl font-bold mb-2 text-yellow-700 dark:text-yellow-200">Coloring</h2>
-            <p className="text-gray-700 dark:text-gray-200">Download and color Bible-themed pictures!</p>
+            <h2 className="mb-2 text-xl font-bold text-yellow-700 dark:text-yellow-200">
+              Coloring
+            </h2>
+            <p className="text-gray-700 dark:text-gray-200">
+              Download and color Bible-themed pictures!
+            </p>
           </div>
         )}
         {activeTab === 'songs' && (
           <div>
-            <h2 className="text-xl font-bold mb-2 text-yellow-700 dark:text-yellow-200">Songs</h2>
-            <p className="text-gray-700 dark:text-gray-200">Sing along to Christian kids' songs and worship music!</p>
+            <h2 className="mb-2 text-xl font-bold text-yellow-700 dark:text-yellow-200">
+              Songs
+            </h2>
+            <p className="text-gray-700 dark:text-gray-200">
+              Sing along to Christian kids&apos; songs and worship music!
+            </p>
           </div>
         )}
         {activeTab === 'characters' && (
           <div>
-            <h2 className="text-xl font-bold mb-2 text-yellow-700 dark:text-yellow-200">Bible Characters</h2>
-            <p className="text-gray-700 dark:text-gray-200">Meet famous Bible characters and learn about them!</p>
+            <h2 className="mb-2 text-xl font-bold text-yellow-700 dark:text-yellow-200">
+              Bible Characters
+            </h2>
+            <p className="text-gray-700 dark:text-gray-200">
+              Meet famous Bible characters and learn about them!
+            </p>
           </div>
         )}
         {activeTab === 'prayer' && (
           <div>
-            <h2 className="text-xl font-bold mb-2 text-yellow-700 dark:text-yellow-200">Prayer Wall</h2>
-            <p className="text-gray-700 dark:text-gray-200">Send a prayer or blessing, and see prayers from other kids!</p>
+            <h2 className="mb-2 text-xl font-bold text-yellow-700 dark:text-yellow-200">
+              Prayer Wall
+            </h2>
+            <p className="text-gray-700 dark:text-gray-200">
+              Send a prayer or blessing, and see prayers from other kids!
+            </p>
           </div>
         )}
       </div>
-      <div className="mt-8 text-lg text-yellow-800 dark:text-yellow-200 font-semibold">Jesus loves you!</div>
+      <div className="mt-8 text-lg font-semibold text-yellow-800 dark:text-yellow-200">
+        Jesus loves you!
+      </div>
     </div>
   );
-} 
+}

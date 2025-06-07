@@ -1,14 +1,43 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import Sidebar from './Sidebar';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import { useEffect, useRef, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+
 import ChatMessage from './ChatMessage';
 import ServiceLinks from './ServiceLinks';
-import { useRouter } from 'next/router';
+import Sidebar from './Sidebar';
 
 interface Message {
   role: 'user' | 'assistant';
   content: string;
+}
+
+type ServiceName = 'chat' | 'devotional' | 'explain-verse';
+
+interface ChatSession {
+  id: string;
+  title: string;
+  messages: Message[];
+  service: ServiceName;
+  backendSessionId?: string;
+  createdAt: number;
+}
+
+interface ChatResponse {
+  response: string;
+  sessionId: string;
+}
+
+interface DevotionalResponse {
+  devotional: string;
+}
+
+interface ExplainVerseResponse {
+  explanation: string;
 }
 
 // Add scripture and quote data
@@ -55,9 +84,9 @@ const QUOTES = [
 ];
 
 export default function ChatInterface() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
+  const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -66,6 +95,126 @@ export default function ChatInterface() {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const storedSessions = localStorage.getItem('chatSessions');
+    if (storedSessions) {
+      setChatSessions(JSON.parse(storedSessions));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (chatSessions.length > 0) {
+      localStorage.setItem('chatSessions', JSON.stringify(chatSessions));
+    }
+  }, [chatSessions]);
+
+  const activeChat = chatSessions.find(
+    (session) => session.id === activeChatId,
+  );
+  const currentService = activeChat?.service || 'chat';
+
+  const updateMessages = (id: string, message: Message) => {
+    setChatSessions((prev) =>
+      prev.map((session) =>
+        session.id === id
+          ? { ...session, messages: [...session.messages, message] }
+          : session,
+      ),
+    );
+  };
+
+  const handleSuccess = (content: string, sessionId: string) => {
+    const assistantMessage: Message = {
+      role: 'assistant',
+      content,
+    };
+    updateMessages(sessionId, assistantMessage);
+    if (activeChat && activeChat.service !== 'chat') {
+      activeChat.service = 'chat';
+    }
+  };
+
+  const handleError = (error: Error, sessionId: string) => {
+    console.error('Error:', error);
+    const assistantMessage: Message = {
+      role: 'assistant',
+      content: 'Sorry, I encountered an error. Please try again.',
+    };
+    updateMessages(sessionId, assistantMessage);
+  };
+
+  const { mutate: sendMessage, isPending: isChatLoading } = useMutation<
+    ChatResponse,
+    Error,
+    { message: string; sessionId: string }
+  >({
+    mutationFn: async ({ message, sessionId }) => {
+      const backendSessionId = chatSessions.find(
+        (s) => s.id === sessionId,
+      )?.backendSessionId;
+      const { data } = await axios.post(
+        'https://sms-bot.harvely.com/api/ai/my-story',
+        {
+          message,
+          sessionId: backendSessionId,
+        },
+      );
+      return data;
+    },
+    onSuccess: (data, variables) => {
+      handleSuccess(data.response, variables.sessionId);
+      if (data.sessionId) {
+        setChatSessions((prev) =>
+          prev.map((s) =>
+            s.id === variables.sessionId
+              ? { ...s, backendSessionId: data.sessionId }
+              : s,
+          ),
+        );
+      }
+    },
+    onError: (error, variables) => handleError(error, variables.sessionId),
+  });
+
+  const { mutate: generateDevotional, isPending: isDevotionalLoading } =
+    useMutation<
+      DevotionalResponse,
+      Error,
+      { story: string; sessionId: string }
+    >({
+      mutationFn: async ({ story }) => {
+        const { data } = await axios.post(
+          'https://sms-bot.harvely.com/api/ai/daily-devotional',
+          { story },
+        );
+        return data;
+      },
+      onSuccess: (data, variables) =>
+        handleSuccess(data.devotional, variables.sessionId),
+      onError: (error, variables) => handleError(error, variables.sessionId),
+    });
+
+  const { mutate: explainVerse, isPending: isExplainVerseLoading } =
+    useMutation<
+      ExplainVerseResponse,
+      Error,
+      { verse: string; sessionId: string }
+    >({
+      mutationFn: async ({ verse }) => {
+        const { data } = await axios.post(
+          'https://sms-bot.harvely.com/api/ai/explain-verse',
+          { verse },
+        );
+        return data;
+      },
+      onSuccess: (data, variables) =>
+        handleSuccess(data.explanation, variables.sessionId),
+      onError: (error, variables) => handleError(error, variables.sessionId),
+    });
+
+  const isLoading =
+    isChatLoading || isDevotionalLoading || isExplainVerseLoading;
 
   useEffect(() => {
     // Set authentication state on client side
@@ -92,11 +241,14 @@ export default function ChatInterface() {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [activeChat?.messages]);
 
   const checkTrialAttempts = () => {
-    const trialAttempts = parseInt(localStorage.getItem('trialAttempts') || '0');
-    if (trialAttempts >= 3) {
+    const trialAttempts = parseInt(
+      localStorage.getItem('trialAttempts') || '0',
+      10,
+    );
+    if (trialAttempts >= 5) {
       setShowLoginPrompt(true);
       return false;
     }
@@ -104,8 +256,27 @@ export default function ChatInterface() {
   };
 
   const incrementTrialAttempts = () => {
-    const currentAttempts = parseInt(localStorage.getItem('trialAttempts') || '0');
+    const currentAttempts = parseInt(
+      localStorage.getItem('trialAttempts') || '0',
+      10,
+    );
     localStorage.setItem('trialAttempts', (currentAttempts + 1).toString());
+  };
+
+  const createNewChat = (
+    service: ServiceName = 'chat',
+    initialMessage?: Message,
+  ) => {
+    const newChat: ChatSession = {
+      id: uuidv4(),
+      title: initialMessage?.content.substring(0, 30) || `New Chat`,
+      messages: initialMessage ? [initialMessage] : [],
+      service,
+      createdAt: Date.now(),
+    };
+    setChatSessions((prev) => [newChat, ...prev]);
+    setActiveChatId(newChat.id);
+    return newChat;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -121,20 +292,28 @@ export default function ChatInterface() {
       content: input.trim(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    let currentChat = activeChat;
+    if (!currentChat) {
+      currentChat = createNewChat('chat', userMessage);
+    } else {
+      updateMessages(currentChat.id, userMessage);
+    }
+
+    const messageToSend = input.trim();
     setInput('');
-    setIsLoading(true);
     incrementTrialAttempts();
 
-    // Simulate API call
-    setTimeout(() => {
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: 'This is a simulated response. In a real application, this would be connected to an AI API.',
-      };
-      setMessages(prev => [...prev, assistantMessage]);
-      setIsLoading(false);
-    }, 1000);
+    switch (currentChat.service) {
+      case 'devotional':
+        generateDevotional({ story: messageToSend, sessionId: currentChat.id });
+        break;
+      case 'explain-verse':
+        explainVerse({ verse: messageToSend, sessionId: currentChat.id });
+        break;
+      default:
+        sendMessage({ message: messageToSend, sessionId: currentChat.id });
+        break;
+    }
   };
 
   const handleServiceClick = (service: { name: string }) => {
@@ -144,34 +323,57 @@ export default function ChatInterface() {
       return;
     }
 
-    const userMessage: Message = {
-      role: 'user',
-      content: `I want to chat about ${service.name}.`,
+    let serviceName: ServiceName = 'chat';
+    let prompt = '';
+
+    if (service.name === 'Daily Prayers & Devotionals') {
+      serviceName = 'devotional';
+      prompt =
+        'I see you want a devotional. Please provide the Bible story or topic for the devotional.';
+    } else if (service.name === 'Bible Study Tools (Adults & Kids)') {
+      serviceName = 'explain-verse';
+      prompt =
+        'I can help with that. Please provide the Bible verse you would like me to explain.';
+    } else {
+      // Default conversational starter
+      const messageContent = `I want to chat about ${service.name}.`;
+      const userMessage: Message = { role: 'user', content: messageContent };
+      const newChat = createNewChat('chat', userMessage);
+      incrementTrialAttempts();
+      sendMessage({ message: messageContent, sessionId: newChat.id });
+      return;
+    }
+
+    const promptMessage: Message = {
+      role: 'assistant',
+      content: prompt,
     };
-    setMessages(prev => [...prev, userMessage]);
-    setIsLoading(true);
-    setInput('');
-    incrementTrialAttempts();
-    
-    setTimeout(() => {
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: `Great! Let's talk about ${service.name}. How can I help you with ${service.name.toLowerCase()}?`,
-      };
-      setMessages(prev => [...prev, assistantMessage]);
-      setIsLoading(false);
-    }, 1000);
+    createNewChat(serviceName, promptMessage);
   };
 
   const handleLogin = () => {
     router.push('/login');
   };
 
-  const hasMessages = messages.length > 0;
+  const hasMessages = activeChat && activeChat.messages.length > 0;
 
   // Combine scripture and quote for the current card
-  const scriptureToShow = SCRIPTURES[scriptureIndex] || { text: '', reference: '' };
+  const scriptureToShow = SCRIPTURES[scriptureIndex] || {
+    text: '',
+    reference: '',
+  };
   const quoteToShow = QUOTES[quoteIndex] || { text: '', author: '' };
+
+  const getPlaceholderText = () => {
+    switch (currentService) {
+      case 'devotional':
+        return 'Enter a story for the devotional...';
+      case 'explain-verse':
+        return 'Enter a verse to explain...';
+      default:
+        return 'Start a new chat...';
+    }
+  };
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
@@ -179,10 +381,10 @@ export default function ChatInterface() {
       {isAuthenticated && (
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md md:hidden"
+          className="fixed left-4 top-4 z-50 rounded-lg bg-white p-2 shadow-md dark:bg-gray-800 md:hidden"
         >
           <svg
-            className="w-6 h-6 text-gray-600 dark:text-gray-300"
+            className="size-6 text-gray-600 dark:text-gray-300"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -200,44 +402,66 @@ export default function ChatInterface() {
       {/* Sidebar - Only show when authenticated */}
       {isAuthenticated && (
         <div
-          className={`fixed inset-y-0 left-0 z-40 w-64 transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${
+          className={`fixed inset-y-0 left-0 z-40 w-64 transition-transform duration-300 ease-in-out md:relative md:translate-x-0${
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
-          <Sidebar />
+          <Sidebar
+            chats={chatSessions}
+            activeChatId={activeChatId}
+            onSelectChat={setActiveChatId}
+            onNewChat={() => setActiveChatId(null)}
+          />
         </div>
       )}
 
       {/* Overlay for mobile - Only show when authenticated */}
       {isAuthenticated && isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
+          className="fixed inset-0 z-30 bg-black bg-opacity-50 md:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
-      
-      <div className="flex-1 flex flex-col h-full">
+
+      <div className="flex h-full flex-1 flex-col">
         {/* App Name Header with Cross Icon */}
-        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4 flex flex-col items-center">
-          <div className="flex items-center justify-center gap-2">
-            <svg xmlns='http://www.w3.org/2000/svg' className='h-7 w-7 text-blue-600' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
-              <path strokeLinecap='round' strokeLinejoin='round' d='M12 3v18m0 0h6m-6 0H6' />
-            </svg>
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">AI Assistant</h1>
+        <div className="flex flex-col items-center border-b border-gray-200 bg-white py-4 dark:border-gray-700 dark:bg-gray-800">
+          <div className=" flex gap-2 rounded-md border-b border-gray-200 bg-gray-100 px-4 dark:border-gray-700 dark:bg-gray-900">
+            <Image src="/images/bishop.svg" alt="Logo" width={40} height={40} />
+            <div className="flex flex-col-reverse justify-center">
+              <h1 className="ml-2 mt-[-2px] text-xl font-bold text-black dark:text-white md:ml-0">
+                Joshua
+              </h1>
+              <p className="ml-2 mt-[1px] text-xs text-gray-800 dark:text-gray-400 md:ml-0">
+                Bishop
+              </p>
+            </div>
           </div>
           {/* Single Carousel: Scripture then Wisdom */}
-          <div className="mt-6 w-full max-w-2xl mx-auto flex items-center justify-center gap-2">
+          <div className="mx-auto mt-6 flex w-full max-w-2xl items-center justify-center gap-2">
             {carouselIndex === 0 ? (
-              <div className="bg-blue-50 dark:bg-blue-900/40 rounded-md p-2 text-center shadow mx-2 min-w-[250px] max-w-[400px]">
-                <span className="text-blue-900 dark:text-blue-100 font-semibold">Scripture of the Day:</span>
-                <span className="block text-gray-800 dark:text-gray-100 mt-1 italic">"{scriptureToShow.text}"</span>
-                <span className="block text-sm text-blue-700 dark:text-blue-200 mt-1">{scriptureToShow.reference}</span>
+              <div className="mx-2 min-w-[250px] max-w-[400px] rounded-md bg-blue-50 p-2 text-center shadow dark:bg-blue-900/40">
+                <span className="font-semibold text-blue-900 dark:text-blue-100">
+                  Scripture of the Day:
+                </span>
+                <span className="mt-1 block italic text-gray-800 dark:text-gray-100">
+                  &quot;{scriptureToShow.text}&quot;
+                </span>
+                <span className="mt-1 block text-sm text-blue-700 dark:text-blue-200">
+                  {scriptureToShow.reference}
+                </span>
               </div>
             ) : (
-              <div className="bg-yellow-50 dark:bg-yellow-900/40 rounded-md p-2 text-center shadow mx-2 min-w-[250px] max-w-[400px]">
-                <span className="text-yellow-900 dark:text-yellow-100 font-semibold">Christian Wisdom:</span>
-                <span className="block text-gray-800 dark:text-gray-100 mt-1 italic">"{quoteToShow.text}"</span>
-                <span className="block text-sm text-yellow-700 dark:text-yellow-200 mt-1">- {quoteToShow.author}</span>
+              <div className="mx-2 min-w-[250px] max-w-[400px] rounded-md bg-yellow-50 p-2 text-center shadow dark:bg-yellow-900/40">
+                <span className="font-semibold text-yellow-900 dark:text-yellow-100">
+                  Christian Wisdom:
+                </span>
+                <span className="mt-1 block italic text-gray-800 dark:text-gray-100">
+                  &quot;{quoteToShow.text}&quot;
+                </span>
+                <span className="mt-1 block text-sm text-yellow-700 dark:text-yellow-200">
+                  - {quoteToShow.author}
+                </span>
               </div>
             )}
           </div>
@@ -245,15 +469,18 @@ export default function ChatInterface() {
 
         {/* Login Prompt */}
         {showLoginPrompt && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Trial Limit Reached</h2>
-              <p className="text-gray-600 dark:text-gray-300 mb-6">
-                You've used all 3 trial messages. Please sign up to continue using the chat.
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="mx-4 w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800">
+              <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+                Trial Limit Reached
+              </h2>
+              <p className="mb-6 text-gray-600 dark:text-gray-300">
+                You&apos;ve used all 3 trial messages. Please sign up to
+                continue using the chat.
               </p>
               <button
                 onClick={handleLogin}
-                className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+                className="w-full rounded-lg bg-blue-500 px-4 py-2 text-white transition-colors hover:bg-blue-600"
               >
                 Sign Up Now
               </button>
@@ -262,10 +489,12 @@ export default function ChatInterface() {
         )}
 
         {/* Chat Messages or Centered ServiceLinks */}
-        <div className={`flex-1 overflow-y-auto p-4 md:pt-4 max-w-3xl w-full mx-auto ${!hasMessages ? 'flex items-center justify-center' : ''}`}>
+        <div
+          className={`mx-auto w-full max-w-3xl flex-1 overflow-y-auto p-4 md:pt-4 ${!hasMessages ? 'flex items-center justify-center' : ''}`}
+        >
           {hasMessages ? (
             <>
-              {messages.map((message, index) => (
+              {activeChat.messages.map((message, index) => (
                 <ChatMessage
                   key={index}
                   role={message.role}
@@ -273,12 +502,12 @@ export default function ChatInterface() {
                 />
               ))}
               {isLoading && (
-                <div className="flex justify-start mb-4">
-                  <div className="bg-gray-200 dark:bg-gray-700 rounded-lg p-4">
+                <div className="mb-4 flex justify-start">
+                  <div className="rounded-lg bg-gray-200 p-4 dark:bg-gray-700">
                     <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce" />
-                      <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce delay-100" />
-                      <div className="w-2 h-2 bg-gray-400 dark:bg-gray-500 rounded-full animate-bounce delay-200" />
+                      <div className="size-2 animate-bounce rounded-full bg-gray-400 dark:bg-gray-500" />
+                      <div className="size-2 animate-bounce rounded-full bg-gray-400 delay-100 dark:bg-gray-500" />
+                      <div className="size-2 animate-bounce rounded-full bg-gray-400 delay-200 dark:bg-gray-500" />
                     </div>
                   </div>
                 </div>
@@ -286,8 +515,8 @@ export default function ChatInterface() {
               <div ref={messagesEndRef} />
             </>
           ) : (
-            <div className="w-full flex items-center justify-center">
-              <div className="max-w-4xl w-full">
+            <div className="flex w-full items-center justify-center">
+              <div className="w-full max-w-4xl">
                 <ServiceLinks onServiceClick={handleServiceClick} />
               </div>
             </div>
@@ -295,24 +524,24 @@ export default function ChatInterface() {
         </div>
 
         {/* Input Form */}
-        <div className="border-t border-gray-400 dark:border-gray-700 bg-gray-300 dark:bg-gray-900 px-2 py-2 md:px-4 md:py-3">
-          <form onSubmit={handleSubmit} className="w-full max-w-3xl mx-auto">
+        <div className="border-t border-gray-400 bg-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 md:px-4 md:py-3">
+          <form onSubmit={handleSubmit} className="mx-auto w-full max-w-3xl">
             <div className="relative">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask me about any Bible verse, story, or submit a prayer request…"
-                className="w-full p-4 pr-12 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder={getPlaceholderText()}
+                className="w-full rounded-lg border border-gray-300 bg-white p-4 pr-12 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
                 disabled={isLoading || showLoginPrompt}
               />
               <button
                 type="submit"
                 disabled={isLoading || !input.trim() || showLoginPrompt}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-blue-500 hover:text-blue-600 disabled:text-gray-400 disabled:cursor-not-allowed"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-blue-500 hover:text-blue-600 disabled:cursor-not-allowed disabled:text-gray-400"
               >
                 <svg
-                  className="w-6 h-6"
+                  className="size-6"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -331,4 +560,4 @@ export default function ChatInterface() {
       </div>
     </div>
   );
-} 
+}

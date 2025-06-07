@@ -1,7 +1,5 @@
 'use client';
 
-import ServiceLinks from "./ServiceLinks";
-
 interface ChatMessageProps {
   role: 'user' | 'assistant';
   content: string;
@@ -9,19 +7,21 @@ interface ChatMessageProps {
 
 export default function ChatMessage({ role, content }: ChatMessageProps) {
   return (
-    <div className={`flex ${role === 'user' ? 'justify-end' : 'justify-start'} mb-4`}>
+    <div
+      className={`flex ${role === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
+    >
       <div
-        className={`max-w-[85vw] md:max-w-[75%] rounded-lg p-4 break-words ${
+        className={`max-w-[85vw] break-words rounded-lg p-4 md:max-w-[75%] ${
           role === 'user'
             ? 'bg-blue-500 text-white'
-            : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'
+            : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-white'
         }`}
       >
         <div className="flex items-start gap-3">
           {role === 'assistant' && (
-            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-blue-500">
               <svg
-                className="w-5 h-5 text-white"
+                className="size-5 text-white"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -36,15 +36,17 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
             </div>
           )}
           <div className="flex-1">
-            <p className="text-sm font-medium mb-1">
+            <p className="mb-1 text-sm font-medium">
               {role === 'user' ? 'You' : 'Assistant'}
             </p>
-            <p className="text-sm md:text-base whitespace-pre-wrap break-words">{content}</p>
+            <p className="whitespace-pre-wrap break-words text-sm md:text-base">
+              {content}
+            </p>
           </div>
           {role === 'user' && (
-            <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-600">
               <svg
-                className="w-5 h-5 text-gray-600 dark:text-gray-300"
+                className="size-5 text-gray-600 dark:text-gray-300"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -62,4 +64,4 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
       </div>
     </div>
   );
-} 
+}
