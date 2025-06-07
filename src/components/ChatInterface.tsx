@@ -490,7 +490,7 @@ export default function ChatInterface() {
 
         {/* Chat Messages or Centered ServiceLinks */}
         <div
-          className={`mx-auto w-full max-w-3xl flex-1 overflow-y-auto p-4 md:pt-4 ${!hasMessages ? 'flex items-center justify-center' : ''}`}
+          className={`mx-auto w-full max-w-3xl flex-1 overflow-y-auto p-4 pb-[150px] pt-[100px] md:pt-4 ${!hasMessages ? 'flex items-center justify-center' : 'justify-center'}`}
         >
           {hasMessages ? (
             <>

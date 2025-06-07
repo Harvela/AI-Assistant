@@ -8,7 +8,7 @@ interface ChatMessageProps {
 export default function ChatMessage({ role, content }: ChatMessageProps) {
   return (
     <div
-      className={`flex pb-[150px] pt-[100px] ${role === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
+      className={`flex ${role === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
     >
       <div
         className={`max-w-[85vw] break-words rounded-lg p-4 md:max-w-[75%] ${
