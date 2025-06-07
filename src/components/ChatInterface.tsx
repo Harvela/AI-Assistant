@@ -426,7 +426,7 @@ export default function ChatInterface() {
       <div className="flex h-full flex-1 flex-col">
         {/* App Name Header with Cross Icon */}
         <div className="flex flex-col items-center border-b border-gray-200 bg-white py-4 dark:border-gray-700 dark:bg-gray-800">
-          <div className=" flex gap-2 rounded-md border-b border-gray-200 bg-gray-100 px-4 dark:border-gray-700 dark:bg-gray-900">
+          <div className=" fixed top-0 z-30 flex w-full justify-center gap-2 rounded-md border-b border-gray-200 bg-gray-100 px-4 pt-4 dark:border-gray-700 dark:bg-gray-900">
             <Image src="/images/bishop.svg" alt="Logo" width={40} height={40} />
             <div className="flex flex-col-reverse justify-center">
               <h1 className="ml-2 mt-[-2px] text-xl font-bold text-black dark:text-white md:ml-0">
