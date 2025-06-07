@@ -90,9 +90,9 @@ export default function ChatInterface() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const [scriptureIndex, setScriptureIndex] = useState(0);
-  const [quoteIndex, setQuoteIndex] = useState(0);
-  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [, setScriptureIndex] = useState(0);
+  const [, setQuoteIndex] = useState(0);
+  const [, setCarouselIndex] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -358,11 +358,11 @@ export default function ChatInterface() {
   const hasMessages = activeChat && activeChat.messages.length > 0;
 
   // Combine scripture and quote for the current card
-  const scriptureToShow = SCRIPTURES[scriptureIndex] || {
-    text: '',
-    reference: '',
-  };
-  const quoteToShow = QUOTES[quoteIndex] || { text: '', author: '' };
+  // const scriptureToShow = SCRIPTURES[scriptureIndex] || {
+  //   text: '',
+  //   reference: '',
+  // };
+  // const quoteToShow = QUOTES[quoteIndex] || { text: '', author: '' };
 
   const getPlaceholderText = () => {
     switch (currentService) {
@@ -402,7 +402,7 @@ export default function ChatInterface() {
       {/* Sidebar - Only show when authenticated */}
       {isAuthenticated && (
         <div
-          className={`fixed inset-y-0 left-0 z-40 w-64 transition-transform duration-300 ease-in-out md:relative md:translate-x-0${
+          className={`fixed inset-y-0 left-0 z-40 w-64 transition-transform duration-300 ease-in-out md:relative md:translate-x-0 ${
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
@@ -438,7 +438,7 @@ export default function ChatInterface() {
             </div>
           </div>
           {/* Single Carousel: Scripture then Wisdom */}
-          <div className="mx-auto mt-6 flex w-full max-w-2xl items-center justify-center gap-2">
+          {/* <div className="mx-auto mt-6 flex w-full max-w-2xl items-center justify-center gap-2">
             {carouselIndex === 0 ? (
               <div className="mx-2 min-w-[250px] max-w-[400px] rounded-md bg-blue-50 p-2 text-center shadow dark:bg-blue-900/40">
                 <span className="font-semibold text-blue-900 dark:text-blue-100">
@@ -464,7 +464,7 @@ export default function ChatInterface() {
                 </span>
               </div>
             )}
-          </div>
+          </div> */}
         </div>
 
         {/* Login Prompt */}
@@ -524,7 +524,7 @@ export default function ChatInterface() {
         </div>
 
         {/* Input Form */}
-        <div className="border-t border-gray-400 bg-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 md:px-4 md:py-3">
+        <div className="fixed bottom-0 w-full border-t border-gray-400 bg-gray-300 p-2 dark:border-gray-700 dark:bg-gray-900 md:px-4 md:py-3">
           <form onSubmit={handleSubmit} className="mx-auto w-full max-w-3xl">
             <div className="relative">
               <input
