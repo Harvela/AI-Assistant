@@ -218,9 +218,9 @@ export default function ChatInterface() {
 
   useEffect(() => {
     // Set authentication state on client side
-    const phone = localStorage.getItem('phoneNumber');
-    const verified = localStorage.getItem('isVerified');
-    setIsAuthenticated(!!phone && !!verified);
+    // const phone = localStorage.getItem('phoneNumber');
+    // const verified = localStorage.getItem('isVerified');
+    setIsAuthenticated(true);
     // Use the day to pick the initial scripture and a random quote
     const day = new Date().getDate();
     setScriptureIndex(day % SCRIPTURES.length);
@@ -248,7 +248,7 @@ export default function ChatInterface() {
       localStorage.getItem('trialAttempts') || '0',
       10,
     );
-    if (trialAttempts >= 5) {
+    if (trialAttempts >= 500) {
       setShowLoginPrompt(true);
       return false;
     }
