@@ -37,7 +37,7 @@ export default function ChatMessage({ role, content }: ChatMessageProps) {
           )}
           <div className="flex-1">
             <p className="mb-1 text-sm font-medium">
-              {role === 'user' ? 'You' : 'Assistant'}
+              {role === 'user' ? 'You' : 'Bishop'}
             </p>
             <p className="whitespace-pre-wrap break-words text-sm md:text-base">
               {content}
