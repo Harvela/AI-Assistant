@@ -20,6 +20,9 @@ export default function VerifyOTP() {
       return;
     }
 
+    // Auto-fill OTP for testing
+    setOtp(['1', '1', '1', '1', '1', '1']);
+
     // Start countdown
     const timer = setInterval(() => {
       setCountdown((prev) => {
