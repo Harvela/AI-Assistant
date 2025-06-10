@@ -5,6 +5,7 @@ import axios from 'axios';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { v4 as uuidv4 } from 'uuid';
 
 import ChatMessage from './ChatMessage';
@@ -95,6 +96,7 @@ export default function ChatInterface() {
   const [, setCarouselIndex] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const storedSessions = localStorage.getItem('chatSessions');
@@ -139,7 +141,7 @@ export default function ChatInterface() {
     console.error('Error:', error);
     const assistantMessage: Message = {
       role: 'assistant',
-      content: 'Sorry, I encountered an error. Please try again.',
+      content: t('chat.error'),
     };
     updateMessages(sessionId, assistantMessage);
   };
@@ -269,7 +271,7 @@ export default function ChatInterface() {
   ) => {
     const newChat: ChatSession = {
       id: uuidv4(),
-      title: initialMessage?.content.substring(0, 30) || `New Chat`,
+      title: initialMessage?.content.substring(0, 30) || t('chat.newChat'),
       messages: initialMessage ? [initialMessage] : [],
       service,
       createdAt: Date.now(),
@@ -326,14 +328,12 @@ export default function ChatInterface() {
     let serviceName: ServiceName = 'chat';
     let prompt = '';
 
-    if (service.name === 'Daily Prayers & Devotionals') {
+    if (service.name === t('chat.services.devotional.title')) {
       serviceName = 'devotional';
-      prompt =
-        'I see you want a devotional. Please provide the Bible story or topic for the devotional.';
-    } else if (service.name === 'Bible Study Tools (Adults & Kids)') {
+      prompt = t('chat.services.devotional.prompt');
+    } else if (service.name === t('chat.services.bibleStudy.title')) {
       serviceName = 'explain-verse';
-      prompt =
-        'I can help with that. Please provide the Bible verse you would like me to explain.';
+      prompt = t('chat.services.bibleStudy.prompt');
     } else {
       // Default conversational starter
       const messageContent = `I want to chat about ${service.name}.`;
@@ -367,11 +367,11 @@ export default function ChatInterface() {
   const getPlaceholderText = () => {
     switch (currentService) {
       case 'devotional':
-        return 'Enter a story for the devotional...';
+        return t('chat.enterStory');
       case 'explain-verse':
-        return 'Enter a verse to explain...';
+        return t('chat.enterVerse');
       default:
-        return 'Start a new chat...';
+        return t('chat.startChat');
     }
   };
 
@@ -418,7 +418,7 @@ export default function ChatInterface() {
       {/* Overlay for mobile - Only show when authenticated */}
       {isAuthenticated && isSidebarOpen && (
         <div
-          className="fixed inset-0 z-30 bg-black bg-opacity-50 md:hidden"
+          className="bg-opacity/50 fixed inset-0 z-30 bg-black md:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -426,14 +426,14 @@ export default function ChatInterface() {
       <div className="flex h-full flex-1 flex-col">
         {/* App Name Header with Cross Icon */}
         <div className="flex flex-col items-center border-b border-gray-200 bg-white py-4 dark:border-gray-700 dark:bg-gray-800">
-          <div className=" fixed top-0 z-30 flex w-full justify-center gap-2 rounded-md border-b border-gray-200 bg-gray-100 px-4 pt-4 dark:border-gray-700 dark:bg-gray-900">
+          <div className="fixed top-0 z-30 flex w-full justify-center gap-2 rounded-md border-b border-gray-200 bg-gray-100 px-4 pt-4 dark:border-gray-700 dark:bg-gray-900">
             <Image src="/images/bishop.svg" alt="Logo" width={40} height={40} />
             <div className="flex flex-col-reverse justify-center">
               <h1 className="ml-2 mt-[-2px] text-xl font-bold text-black dark:text-white md:ml-0">
-                Joshua
+                {t('chat.title')}
               </h1>
-              <p className="ml-2 mt-[1px] text-xs text-gray-800 dark:text-gray-400 md:ml-0">
-                Bishop
+              <p className="ml-2 mt-px text-xs text-gray-800 dark:text-gray-400 md:ml-0">
+                {t('chat.subtitle')}
               </p>
             </div>
           </div>
@@ -469,20 +469,19 @@ export default function ChatInterface() {
 
         {/* Login Prompt */}
         {showLoginPrompt && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-opacity/50 fixed inset-0 z-50 flex items-center justify-center bg-black">
             <div className="mx-4 w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800">
               <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
-                Trial Limit Reached
+                {t('chat.trialLimit.title')}
               </h2>
               <p className="mb-6 text-gray-600 dark:text-gray-300">
-                You&apos;ve used all 3 trial messages. Please sign up to
-                continue using the chat.
+                {t('chat.trialLimit.message')}
               </p>
               <button
                 onClick={handleLogin}
                 className="w-full rounded-lg bg-blue-500 px-4 py-2 text-white transition-colors hover:bg-blue-600"
               >
-                Sign Up Now
+                {t('chat.trialLimit.signUp')}
               </button>
             </div>
           </div>

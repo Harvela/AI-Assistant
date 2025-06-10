@@ -1,0 +1,85 @@
+{
+  "verify": {
+    "title": "Thibitisha Simu Yako",
+    "subtitle": "Weka msimbo wa tarakimu 6 uliotumwa kwenye simu yako",
+    "verifyButton": "Thibitisha Msimbo",
+    "verifying": "Inathibitisha...",
+    "resendCode": "Tuma tena msimbo wa uthibitisho",
+    "resendCountdown": "Tuma tena msimbo katika {{count}}s",
+    "errors": {
+      "invalidCode": "Msimbo wa uthibitisho batili. Tafadhali jaribu tena.",
+      "incompleteCode": "Tafadhali weka msimbo kamili wa uthibitisho",
+      "resendFailed": "Kutuma msimbo kumeshindwa. Tafadhali jaribu tena."
+    }
+  },
+  "chat": {
+    "title": "Yoshua",
+    "subtitle": "Askofu",
+    "newChat": "Mazungumzo Mapya",
+    "startChat": "Anza mazungumzo mapya...",
+    "enterStory": "Weka hadithi kwa ajili ya ibada...",
+    "enterVerse": "Weka aya unayotaka nifafanue...",
+    "loading": "Inapakia...",
+    "error": "Samahani, nimekutana na hitilafu. Tafadhali jaribu tena.",
+    "trialLimit": {
+      "title": "Kikomo cha Jaribio Kimefikia",
+      "message": "Umetumia ujumbe wako wote 3 wa jaribio. Tafadhali jisajili ili uendelee kutumia chat.",
+      "signUp": "Jisajili Sasa"
+    },
+    "services": {
+      "devotional": {
+        "title": "Maombi ya Kila Siku & Ibada",
+        "prompt": "Ninaona unataka ibada. Tafadhali toa hadithi ya Biblia au mada kwa ajili ya ibada."
+      },
+      "bibleStudy": {
+        "title": "Vifaa vya Kujifunza Biblia (Wazima & Watoto)",
+        "prompt": "Naweza kukusaidia na hilo. Tafadhali toa aya ya Biblia unayotaka nifafanue."
+      }
+    }
+  },
+  "services": {
+    "prayers": {
+      "title": "Maombi ya Kila Siku & Ibada",
+      "description": "Miongozo ya kiroho na maombi ya kila siku"
+    },
+    "advice": {
+      "title": "Ushauri wa Maisha ya Kikristo",
+      "description": "Miongozo ya kuishi maisha ya Kikristo"
+    },
+    "bibleStudy": {
+      "title": "Vifaa vya Kujifunza Biblia (Wazima & Watoto)",
+      "description": "Vifaa na rasilimali za kujifunza Biblia"
+    },
+    "motivation": {
+      "title": "Ujumbe wa Kuchochea & Baraka",
+      "description": "Ujumbe wa kuchochea na baraka"
+    }
+  },
+  "sidebar": {
+    "newChat": "Mazungumzo mapya",
+    "chatHistory": "Historia ya Mazungumzo",
+    "noChats": "Bado hakuna mazungumzo.",
+    "theme": {
+      "label": "Muonekano",
+      "light": "Mwanga",
+      "dark": "Giza"
+    },
+    "logout": "Toka"
+  },
+  "login": {
+    "title": "Jisajili Ili Kuendelea",
+    "subtitle": "Umetumia ujumbe wako wote wa jaribio. Jisajili ili kuendelea kutumia ongea.",
+    "phoneNumber": {
+      "label": "Namba ya Simu",
+      "placeholder": "Weka namba yako ya simu"
+    },
+    "errors": {
+      "invalidPhone": "Tafadhali weka namba halali ya simu",
+      "general": "Hitilafu imetokea. Tafadhali jaribu tena."
+    },
+    "submit": {
+      "loading": "Inatuma msimbo...",
+      "default": "Tuma Msimbo wa Uthibitisho"
+    }
+  }
+}

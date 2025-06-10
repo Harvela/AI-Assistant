@@ -1,16 +1,21 @@
 'use client';
 
+import '../i18n/config';
+
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function VerifyOTP() {
+  const { t } = useTranslation();
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [countdown, setCountdown] = useState(60);
   const router = useRouter();
   const { theme, setTheme } = useTheme();
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     // Check if phone number exists
@@ -72,7 +77,7 @@ export default function VerifyOTP() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setCountdown(60);
     } catch (err) {
-      setError('Failed to resend code. Please try again.');
+      setError(t('verify.errors.resendFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -85,7 +90,7 @@ export default function VerifyOTP() {
 
     const otpString = otp.join('');
     if (otpString.length !== 6) {
-      setError('Please enter the complete verification code');
+      setError(t('verify.errors.incompleteCode'));
       setIsLoading(false);
       return;
     }
@@ -100,7 +105,7 @@ export default function VerifyOTP() {
       // Redirect to chat page
       router.push('/chat');
     } catch (err) {
-      setError('Invalid verification code. Please try again.');
+      setError(t('verify.errors.invalidCode'));
     } finally {
       setIsLoading(false);
     }
@@ -108,8 +113,17 @@ export default function VerifyOTP() {
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
-      {/* Theme Toggle */}
-      <div className="absolute right-4 top-4">
+      {/* Theme and Language Toggle */}
+      <div className="absolute right-4 top-4 flex gap-2">
+        <select
+          value={i18n.language}
+          onChange={(e) => i18n.changeLanguage(e.target.value)}
+          className="rounded-lg bg-white p-2 shadow-md dark:bg-gray-800 dark:text-white"
+        >
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+          <option value="sw">Kiswahili</option>
+        </select>
         <button
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           className="rounded-lg bg-white p-2 shadow-md dark:bg-gray-800"
@@ -150,10 +164,10 @@ export default function VerifyOTP() {
         <div className="w-full max-w-md space-y-8">
           <div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-              Verify Your Phone
+              {t('verify.title')}
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-              Enter the 6-digit code sent to your phone
+              {t('verify.subtitle')}
             </p>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -206,10 +220,10 @@ export default function VerifyOTP() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Verifying...
+                    {t('verify.verifying')}
                   </div>
                 ) : (
-                  'Verify Code'
+                  t('verify.verifyButton')
                 )}
               </button>
 
@@ -220,8 +234,8 @@ export default function VerifyOTP() {
                 className="text-sm text-blue-500 transition-colors hover:text-blue-600 disabled:cursor-not-allowed disabled:text-gray-400"
               >
                 {countdown > 0
-                  ? `Resend code in ${countdown}s`
-                  : 'Resend verification code'}
+                  ? t('verify.resendCountdown', { count: countdown })
+                  : t('verify.resendCode')}
               </button>
             </div>
           </form>

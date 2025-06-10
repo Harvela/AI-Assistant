@@ -1,0 +1,85 @@
+{
+  "verify": {
+    "title": "Vérifiez Votre Téléphone",
+    "subtitle": "Entrez le code à 6 chiffres envoyé à votre téléphone",
+    "verifyButton": "Vérifier le Code",
+    "verifying": "Vérification...",
+    "resendCode": "Renvoyer le code de vérification",
+    "resendCountdown": "Renvoyer le code dans {{count}}s",
+    "errors": {
+      "invalidCode": "Code de vérification invalide. Veuillez réessayer.",
+      "incompleteCode": "Veuillez entrer le code de vérification complet",
+      "resendFailed": "Échec de l'envoi du code. Veuillez réessayer."
+    }
+  },
+  "chat": {
+    "title": "Josué",
+    "subtitle": "Évêque",
+    "newChat": "Nouvelle Conversation",
+    "startChat": "Démarrer une nouvelle conversation...",
+    "enterStory": "Entrez une histoire pour la dévotion...",
+    "enterVerse": "Entrez un verset à expliquer...",
+    "loading": "Chargement...",
+    "error": "Désolé, j'ai rencontré une erreur. Veuillez réessayer.",
+    "trialLimit": {
+      "title": "Limite d'Essai Atteinte",
+      "message": "Vous avez utilisé vos 3 messages d'essai. Veuillez vous inscrire pour continuer à utiliser le chat.",
+      "signUp": "S'inscrire Maintenant"
+    },
+    "services": {
+      "devotional": {
+        "title": "Prière Quotidienne & Dévotions",
+        "prompt": "Je vois que vous souhaitez une dévotion. Veuillez fournir l'histoire biblique ou le sujet pour la dévotion."
+      },
+      "bibleStudy": {
+        "title": "Outils d'Étude Biblique (Adultes & Enfants)",
+        "prompt": "Je peux vous aider avec cela. Veuillez fournir le verset biblique que vous souhaitez que j'explique."
+      }
+    }
+  },
+  "services": {
+    "prayers": {
+      "title": "Prière Quotidienne & Dévotions",
+      "description": "Guide spirituel et prières quotidiennes"
+    },
+    "advice": {
+      "title": "Conseils de Vie Chrétienne",
+      "description": "Conseils pour vivre une vie chrétienne"
+    },
+    "bibleStudy": {
+      "title": "Outils d'Étude Biblique (Adultes & Enfants)",
+      "description": "Outils et ressources pour l'étude de la Bible"
+    },
+    "motivation": {
+      "title": "Messages Motivants & Bénédictions",
+      "description": "Messages inspirants et bénédictions"
+    }
+  },
+  "sidebar": {
+    "newChat": "Nouvelle conversation",
+    "chatHistory": "Historique des conversations",
+    "noChats": "Pas encore de conversations.",
+    "theme": {
+      "label": "Thème",
+      "light": "Clair",
+      "dark": "Sombre"
+    },
+    "logout": "Déconnexion"
+  },
+  "login": {
+    "title": "Inscrivez-vous pour Continuer",
+    "subtitle": "Vous avez utilisé tous vos messages d'essai. Inscrivez-vous pour continuer à utiliser le chat.",
+    "phoneNumber": {
+      "label": "Numéro de Téléphone",
+      "placeholder": "Entrez votre numéro de téléphone"
+    },
+    "errors": {
+      "invalidPhone": "Veuillez entrer un numéro de téléphone valide",
+      "general": "Une erreur s'est produite. Veuillez réessayer."
+    },
+    "submit": {
+      "loading": "Envoi du code...",
+      "default": "Envoyer le Code de Vérification"
+    }
+  }
+}

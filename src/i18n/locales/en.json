@@ -1,0 +1,85 @@
+{
+  "verify": {
+    "title": "Verify Your Phone",
+    "subtitle": "Enter the 6-digit code sent to your phone",
+    "verifyButton": "Verify Code",
+    "verifying": "Verifying...",
+    "resendCode": "Resend verification code",
+    "resendCountdown": "Resend code in {{count}}s",
+    "errors": {
+      "invalidCode": "Invalid verification code. Please try again.",
+      "incompleteCode": "Please enter the complete verification code",
+      "resendFailed": "Failed to resend code. Please try again."
+    }
+  },
+  "chat": {
+    "title": "Joshua",
+    "subtitle": "Bishop",
+    "newChat": "New Chat",
+    "startChat": "Start a new chat...",
+    "enterStory": "Enter a story for the devotional...",
+    "enterVerse": "Enter a verse to explain...",
+    "loading": "Loading...",
+    "error": "Sorry, I encountered an error. Please try again.",
+    "trialLimit": {
+      "title": "Trial Limit Reached",
+      "message": "You've used all 3 trial messages. Please sign up to continue using the chat.",
+      "signUp": "Sign Up Now"
+    },
+    "services": {
+      "devotional": {
+        "title": "Daily Prayers & Devotionals",
+        "prompt": "I see you want a devotional. Please provide the Bible story or topic for the devotional."
+      },
+      "bibleStudy": {
+        "title": "Bible Study Tools (Adults & Kids)",
+        "prompt": "I can help with that. Please provide the Bible verse you would like me to explain."
+      }
+    }
+  },
+  "services": {
+    "prayers": {
+      "title": "Daily Prayers & Devotionals",
+      "description": "Daily spiritual guidance and prayers"
+    },
+    "advice": {
+      "title": "Christian Life Advice",
+      "description": "Guidance for living a Christian life"
+    },
+    "bibleStudy": {
+      "title": "Bible Study Tools (Adults & Kids)",
+      "description": "Tools and resources for Bible study"
+    },
+    "motivation": {
+      "title": "Motivational Messages & Blessings",
+      "description": "Inspiring messages and blessings"
+    }
+  },
+  "sidebar": {
+    "newChat": "New chat",
+    "chatHistory": "Chat History",
+    "noChats": "No chats yet.",
+    "theme": {
+      "label": "Theme",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "logout": "Logout"
+  },
+  "login": {
+    "title": "Sign Up to Continue",
+    "subtitle": "You've used all trial messages. Sign up to continue using the chat.",
+    "phoneNumber": {
+      "label": "Phone Number",
+      "placeholder": "Enter your phone number"
+    },
+    "errors": {
+      "invalidPhone": "Please enter a valid phone number",
+      "general": "An error occurred. Please try again."
+    },
+    "submit": {
+      "loading": "Sending code...",
+      "default": "Send Verification Code"
+    }
+  }
+}

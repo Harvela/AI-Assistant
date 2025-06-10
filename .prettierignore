@@ -1,0 +1,13 @@
+node_modules
+.next
+.vscode
+coverage
+dist
+build
+
+# next.js build output
+.next/
+out/
+
+# dependencies
+/node_modules 

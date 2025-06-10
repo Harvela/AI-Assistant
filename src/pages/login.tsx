@@ -3,8 +3,10 @@
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function Login() {
+  const { t, i18n } = useTranslation();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -19,7 +21,7 @@ export default function Login() {
     // Basic phone number validation
     // const phoneRegex = /^\+?[1-9]\d{1,14}$/;
     if (phoneNumber.length < 5) {
-      setError('Please enter a valid phone number');
+      setError(t('login.errors.invalidPhone'));
       setIsLoading(false);
       return;
     }
@@ -35,7 +37,7 @@ export default function Login() {
       // Redirect to OTP verification page
       router.push('/verify');
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      setError(t('login.errors.general'));
     } finally {
       setIsLoading(false);
     }
@@ -43,8 +45,17 @@ export default function Login() {
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
-      {/* Theme Toggle */}
-      <div className="absolute right-4 top-4">
+      {/* Theme and Language Toggle */}
+      <div className="absolute right-4 top-4 flex gap-2">
+        <select
+          value={i18n.language}
+          onChange={(e) => i18n.changeLanguage(e.target.value)}
+          className="rounded-lg bg-white p-2 shadow-md dark:bg-gray-800 dark:text-white"
+        >
+          <option value="en">English</option>
+          <option value="fr">Français</option>
+          <option value="sw">Kiswahili</option>
+        </select>
         <button
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           className="rounded-lg bg-white p-2 shadow-md dark:bg-gray-800"
@@ -85,18 +96,17 @@ export default function Login() {
         <div className="w-full max-w-md space-y-8">
           <div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-              Sign Up to Continue
+              {t('login.title')}
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-              You&apos;ve used all trial messages. Sign up to continue using the
-              chat.
+              {t('login.subtitle')}
             </p>
           </div>
           <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="-space-y-px rounded-md shadow-sm">
               <div>
                 <label htmlFor="phone-number" className="sr-only">
-                  Phone Number
+                  {t('login.phoneNumber.label')}
                 </label>
                 <input
                   id="phone-number"
@@ -106,7 +116,7 @@ export default function Login() {
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   className="relative block w-full appearance-none rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400 sm:text-sm"
-                  placeholder="Enter your phone number"
+                  placeholder={t('login.phoneNumber.placeholder')}
                 />
               </div>
             </div>
@@ -143,10 +153,10 @@ export default function Login() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                       ></path>
                     </svg>
-                    Sending code...
+                    {t('login.submit.loading')}
                   </div>
                 ) : (
-                  'Send Verification Code'
+                  t('login.submit.default')
                 )}
               </button>
             </div>

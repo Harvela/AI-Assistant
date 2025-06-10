@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ChatSession {
   id: string;
@@ -28,6 +29,7 @@ export default function Sidebar({
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setMounted(true);
@@ -49,10 +51,10 @@ export default function Sidebar({
         <Image src="/images/bishop.svg" alt="Logo" width={40} height={40} />
         <div className="flex flex-col-reverse justify-center">
           <h1 className="ml-2 mt-[-2px] text-xl font-bold text-black dark:text-white md:ml-0">
-            Joshua
+            {t('chat.title')}
           </h1>
-          <p className="ml-2 mt-[1px] text-xs text-gray-800 dark:text-gray-400 md:ml-0">
-            Bishop
+          <p className="ml-2 mt-px text-xs text-gray-800 dark:text-gray-400 md:ml-0">
+            {t('chat.subtitle')}
           </p>
         </div>
       </div>
@@ -62,9 +64,9 @@ export default function Sidebar({
         <button
           onClick={onNewChat}
           className="text-semibold w-full rounded-md bg-black px-4 py-2 text-[16px] text-white"
-          title="New Chat"
+          title={t('sidebar.newChat')}
         >
-          New chat
+          {t('sidebar.newChat')}
         </button>
 
         {/* Feature Links */}
@@ -82,10 +84,12 @@ export default function Sidebar({
       {/* Chat History */}
       <div className="flex-1 overflow-y-auto px-4 pb-2">
         <h2 className="my-2 px-2 text-xs font-semibold text-gray-500 dark:text-gray-400">
-          Chat History
+          {t('sidebar.chatHistory')}
         </h2>
         {chats.length === 0 && (
-          <div className="px-2 text-xs text-gray-400">No chats yet.</div>
+          <div className="px-2 text-xs text-gray-400">
+            {t('sidebar.noChats')}
+          </div>
         )}
         <ul className="space-y-1">
           {chats.map((chat) => (
@@ -121,14 +125,18 @@ export default function Sidebar({
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           className="flex w-full items-center justify-between rounded-lg px-4 py-2 text-black transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
         >
-          <span>Theme</span>
-          <span className="text-sm">{theme === 'dark' ? 'Dark' : 'Light'}</span>
+          <span>{t('sidebar.theme.label')}</span>
+          <span className="text-sm">
+            {theme === 'dark'
+              ? t('sidebar.theme.dark')
+              : t('sidebar.theme.light')}
+          </span>
         </button>
         <button
           onClick={handleLogout}
           className="w-full rounded-lg px-4 py-2 text-left text-red-600 transition-colors hover:bg-red-50 dark:hover:bg-red-900/20"
         >
-          Logout
+          {t('sidebar.logout')}
         </button>
       </div>
     </div>
