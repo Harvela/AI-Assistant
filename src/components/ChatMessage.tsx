@@ -6,6 +6,7 @@ interface ChatMessageProps {
 }
 
 export default function ChatMessage({ role, content }: ChatMessageProps) {
+  console.log('1');
   return (
     <div
       className={`flex ${role === 'user' ? 'justify-end' : 'justify-start'} mb-4`}
