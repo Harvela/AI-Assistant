@@ -3,6 +3,7 @@
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -426,17 +427,30 @@ export default function ChatInterface() {
       <div className="flex h-full flex-1 flex-col">
         {/* App Name Header with Cross Icon */}
         <div className="flex flex-col items-center border-b border-gray-200 bg-white py-4 dark:border-gray-700 dark:bg-gray-800">
-          <div className="fixed top-0 z-30 flex w-full justify-center gap-2 rounded-md border-b border-gray-200 bg-gray-100 px-4 pt-4 dark:border-gray-700 dark:bg-gray-900">
-            <Image src="/images/bishop.svg" alt="Logo" width={40} height={40} />
-            <div className="flex flex-col-reverse justify-center">
-              <h1 className="ml-2 mt-[-2px] text-xl font-bold text-black dark:text-white md:ml-0">
+          <div className="fixed top-0 z-30 flex w-full justify-center gap-2 rounded-md border-b border-gray-200 bg-gray-100 px-4 pl-[80px] pt-4 dark:border-gray-700 dark:bg-gray-900">
+            <Image
+              src="/images/bishop.svg"
+              className="mt-[-8px]"
+              alt="Logo"
+              width={40}
+              height={40}
+            />
+            <div className="flex flex-col-reverse justify-between">
+              <h1 className="ml-2 mt-[-5px] text-xl font-bold text-black dark:text-white md:ml-0">
                 {t('chat.title')}
               </h1>
               <p className="ml-2 mt-px text-xs text-gray-800 dark:text-gray-400 md:ml-0">
                 {t('chat.subtitle')}
               </p>
             </div>
+            <Link
+              href="https://forms.gle/DwXAqd7jUVQjjCyV7"
+              className="z-50 ml-auto h-[40px] rounded bg-white px-4 py-2 text-sm text-gray-800 hover:bg-gray-100"
+            >
+              Feedback
+            </Link>
           </div>
+
           {/* Single Carousel: Scripture then Wisdom */}
           {/* <div className="mx-auto mt-6 flex w-full max-w-2xl items-center justify-center gap-2">
             {carouselIndex === 0 ? (
