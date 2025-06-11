@@ -427,15 +427,15 @@ export default function ChatInterface() {
       <div className="flex h-full flex-1 flex-col">
         {/* App Name Header with Cross Icon */}
         <div className="flex flex-col items-center border-b border-gray-200 bg-white py-4 dark:border-gray-700 dark:bg-gray-800">
-          <div className="fixed top-0 z-30 flex w-full justify-center gap-2 rounded-md border-b border-gray-200 bg-gray-100 px-4 pl-[80px] pt-4 dark:border-gray-700 dark:bg-gray-900">
+          <div className="fixed top-0 z-30 flex w-full justify-center gap-2 rounded-md border-b border-gray-200 bg-gray-100 px-4 pl-[80px] pt-4 dark:border-gray-700 dark:bg-gray-900 md:min-h-[40px]">
             <Image
               src="/images/bishop.svg"
-              className="mt-[-8px]"
+              className="visible mt-[-8px] md:hidden"
               alt="Logo"
               width={40}
               height={40}
             />
-            <div className="flex flex-col-reverse justify-between">
+            <div className="visible flex flex-col-reverse justify-between  md:hidden">
               <h1 className="ml-2 mt-[-5px] text-xl font-bold text-black dark:text-white md:ml-0">
                 {t('chat.title')}
               </h1>
@@ -445,7 +445,7 @@ export default function ChatInterface() {
             </div>
             <Link
               href="https://forms.gle/DwXAqd7jUVQjjCyV7"
-              className="z-50 ml-auto h-[40px] rounded bg-white px-4 py-2 text-sm text-gray-800 hover:bg-gray-100"
+              className="relative z-50 ml-auto h-[40px] rounded bg-white px-4 py-2 text-sm text-gray-800 hover:bg-gray-100 md:fixed md:right-4 md:top-4"
             >
               Feedback
             </Link>
